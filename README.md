@@ -1,17 +1,23 @@
 # KarlG
 
-This is a version of GitHub's Campfire bot, hubot, with highly opinionated
-configuration. Further documentation is available at http://hubot.github.com/,
-and general configuration info and usage from hubot applies to KarlG.
+A version of GitHub's Hubot, with highly opinionated configuration.
+
+[Hubot documentation][hubot-docs] generally applies; there are no changes to
+the core.
+
+[hubot-docs]: http://hubot.github.com/
 
 ### Deploying your own
 
-KarlG is designed to be deployed on [Heroku][heroku] You will need a verified
+KarlG should be deployed on [Heroku][heroku]. It requires a verified
 account, but can be run entirely with free add-ons.
 
     heroku create --stack cedar
     git push heroku master
-    heroku ps:scale app=1
+
+Add the following heroku add-ons:
+
+    heroku config:add redistogo:nano
 
 Set the following configuration variables:
 
@@ -24,15 +30,12 @@ Set the following configuration variables:
     heroku config:add HUBOT_IRC_PORT=6697
     heroku config:add HUBOT_IRC_USESSL="true"
 
-Add the following heroku add-ons:
+Turn it on:
 
-    heroku config:add redistogo:nano
+    heroku ps:scale app=1
 
 More detailed instructions are available at [grove][grove-install] and the
 Heroku [node docs][heroku-node-docs].
-
-More detailed documentation can be found on the
-[deploying hubot onto Heroku][deploy-heroku] wiki page.
 
 [heroku]: http://www.heroku.com
 [grove-install]: https://grove.io/blog/hubot-grove
@@ -42,3 +45,6 @@ More detailed documentation can be found on the
 
 Get comfortable with `heroku logs --tail` and `heroku restart`
 
+Consider changing the log level:
+
+    heroku config:add LOG_LEVEL=DEBUG
