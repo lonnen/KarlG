@@ -1,1 +1,1 @@
-web: bin/hubot -a irc -n KarlG
+app: bin/hubot -a irc -n KarlG
