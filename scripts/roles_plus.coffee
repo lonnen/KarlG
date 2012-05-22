@@ -16,23 +16,34 @@ module.exports = (robot) ->
   robot.respond /who is @?([\w .-]+)\?*$/i, (msg) ->
     name = msg.match[1]
 
-    if name is "you"
-      msg.send "Who ain't I?"
-    else if name is robot.name
-      msg.send "The best."
-    else
-      users = robot.usersForFuzzyName(name)
-      if users.length is 1
-        user = users[0]
-        user.roles = user.roles or [ ]
-        if user.roles.length > 0
-          msg.send "#{name} is #{user.roles.join(", ")}."
+    matches = name.split /^(a |the )/
+    if matches.length > 1
+      role = name
+      users = for id, user of robot.users()
+        if role in user.roles
+          user.name
         else
-          msg.send "#{name} is nothing to me."
-      else if users.length > 1
-        msg.send getAmbiguousUserText users
+          # need this or coffeescript will push null
+      if users.length > 1
+        msg.send "There are a few: {users.join(',')}"
+      if users.length is 1
+        msg.send "#{users[0]} is #{role}."
       else
-        msg.send "#{name}? Never heard of 'em"
+        msg.send "I don't know any. Sorry."
+      return
+
+    users = robot.usersForFuzzyName(name)
+    if users.length is 1
+      user = users[0]
+      user.roles = user.roles or [ ]
+      if user.roles.length > 0
+        msg.send "#{name} is #{user.roles.join(", ")}."
+      else
+        msg.send "#{name} is nothing to me."
+    else if users.length > 1
+      msg.send getAmbiguousUserText users
+    else
+      msg.send findNameForRole name
 
   robot.respond /@?([\w .-_]+) is (["'\w: -_]+)[.!]*$/i, (msg) ->
     name    = msg.match[1].trim()
