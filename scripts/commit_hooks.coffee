@@ -12,7 +12,7 @@ module.exports = (robot) ->
     commits = data.commits
 
     msg = "#{data.user} pushed #{commits.length} commits to #{data.repository.name}:\n"
-    msg += "[#{commit.branch}] #{commit.message}\n" for commit in commits
+    msg += "[#{data.ref}] #{commit.message}\n" for commit in commits
 
     robot.messageRoom room, msg
 
